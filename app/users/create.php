@@ -9,14 +9,24 @@ $select = "SELECT * FROM rules";
 $rules = mysqli_query($connection, $select);
 
 $profile_id = $_SESSION['admin']['id'];
-
+$validation_error = [];
 if(isset($_POST['send'])){
-    $name = $_POST['name'];
-    $email = $_POST['email'];
-    $rule = $_POST['rule_id'];
+    $name = validation($_POST['name']);
+    $email = validation($_POST['email']);
+    $rule = validation($_POST['rule_id']);
     $password = 12345678;
     $image_name = "def.webp";
     $hash_password = password_hash($password , PASSWORD_DEFAULT);
+    if(string_validation($name)){
+        $_SESSION['message'] = "MAX NMAE IS 20 AND MIN IS 3";
+        redirect('app/users/create.php');
+        exit;
+    }
+    if(string_validation($email, 3 , 30)){
+        $_SESSION['message'] = "MAX EMAIL IS 30 AND MIN IS 3";
+        redirect('app/users/create.php');
+        exit;
+    }
     $select_query = "SELECT * FROM users WHERE email = '$email'";
     $result = mysqli_query($connection, $select_query);
     $numrows = mysqli_num_rows($result);
@@ -26,13 +36,16 @@ if(isset($_POST['send'])){
         exit;
 
     }else{
+      if(empty($validation_error)){
         $insert = "INSERT INTO users (name, email, password, image, country, created_by, rule)
         VALUES ('$name', '$email', '$hash_password', '$image_name', DEFAULT, '$profile_id', '$rule')";
 
         $i = mysqli_query($connection, $insert);
+        $_SESSION['message'] = "User Created Successfully!";
         redirect('app/users/');
         exit;
-   }
+     }
+  }
 }
 ?>
   <main id="main" class="main">

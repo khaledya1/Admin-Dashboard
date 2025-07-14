@@ -25,6 +25,7 @@ function restore_session_from_cookie($connection) {
                 'id' => $user['id'],
                 'name' => $user['name'],
                 'email' => $user['email'],
+                'rule_number' => $user['rule'],
                 'password' => $user['password'],
                 'image' => $user['image'],
                 'country' => $user['country'],
@@ -50,6 +51,30 @@ function auth( $rule1 = null , $rule2 = null ) {
     else{
         redirect("pages/login.php");
         }
+}
+
+function validation($data) {
+    $data = ltrim($data);
+    $data = rtrim($data);
+    $data = trim($data);
+    $data =  strip_tags($data);
+    $data = stripslashes($data);
+    $data = htmlspecialchars($data);
+    return $data;
+}
+
+function string_validation($data , $min_length = 3, $max_length = 20) {
+
+    $is_empty = empty($data);
+    $is_max_length = strlen($data) > $max_length;
+    $is_min_length = strlen($data) < $min_length;
+    
+    if($is_empty || $is_max_length || $is_min_length) {
+        return true;
+    } else {
+        return false;
+    }
+
 }
 
 

@@ -3,21 +3,39 @@ include_once '../core/config.php';
 include_once '../shared/head.php';
 auth(2,3);
 
-
 if(isset($_POST['update'])){
     $id = $_SESSION['admin']['id'];
-    $name = $_POST['name'];
-    $email = $_POST['email'];
-    $country = $_POST['country'];
+    $name = validation($_POST['name']);
+    $email = validation($_POST['email']);
+    $country = validation($_POST['country']);
+
+    if(string_validation($name)){
+        $_SESSION['message'] = "MAX NAME IS 20 AND MIN IS 3";
+        redirect('pages/profile.php');
+        exit;
+    }
+
+    if(string_validation($email, 3, 30)){
+        $_SESSION['message'] = "MAX EMAIL IS 30 AND MIN IS 3";
+        redirect('pages/profile.php');
+        exit;
+    }
+
+    if(string_validation($country)){
+        $_SESSION['message'] = "MAX COUNTRY IS 20 AND MIN IS 3";
+        redirect('pages/profile.php');
+        exit;
+    }
 
     $check_email_query = "SELECT * FROM users WHERE email='$email' AND id != '$id' ";
     $check_result = mysqli_query($connection, $check_email_query);
 
     if(mysqli_num_rows($check_result) > 0) {
-    $_SESSION['message'] = "This email is already exists";
-    redirect('pages/profile.php');
-    exit;
+        $_SESSION['message'] = "This email is already exists";
+        redirect('pages/profile.php');
+        exit;
     }
+
     if(empty($_FILES['image']['name'])) {
         $image_name = $_SESSION['admin']['image'];
     } else {
@@ -29,9 +47,10 @@ if(isset($_POST['update'])){
         $location = "../app/users/upload/$image_name";
         move_uploaded_file($tmp_name, $location);
     }
+
     $update_query = "UPDATE users SET name='$name', email='$email', country='$country', image='$image_name' WHERE id='$id'";
     $u = mysqli_query($connection, $update_query);
-    
+
     $_SESSION['admin']['name'] = $name;
     $_SESSION['admin']['email'] = $email;
     $_SESSION['admin']['country'] = $country;
@@ -60,34 +79,39 @@ if(isset($_POST['change_password'])){
     $result = mysqli_query($connection, $select);
     $user = mysqli_fetch_assoc($result);
 
-    $current_password = $_POST['current_password'];
-    $new_password = $_POST['new_password'];
-    $confirm_password = $_POST['confirm_password'];
+    $current_password = validation($_POST['current_password']);
+    $new_password = validation($_POST['new_password']);
+    $confirm_password = validation($_POST['confirm_password']);
     $database_password = $user['password'];
-    
-    $check_password = password_verify($current_password,$database_password);
+
+    if(string_validation($new_password, 6, 50)){
+        $_SESSION['message'] = "NEW PASSWORD MUST BE BETWEEN 6 AND 50 CHARACTERS";
+        redirect('pages/profile.php');
+        exit;
+    }
+
+    if(string_validation($confirm_password, 6, 50)){
+        $_SESSION['message'] = "CONFIRM PASSWORD MUST BE BETWEEN 6 AND 50 CHARACTERS";
+        redirect('pages/profile.php');
+        exit;
+    }
+
+    $check_password = password_verify($current_password, $database_password);
 
     if($check_password){
-
         if($new_password == $confirm_password){
-            $new_hash_password = password_hash($new_password,PASSWORD_DEFAULT);
+            $new_hash_password = password_hash($new_password, PASSWORD_DEFAULT);
             $update = "UPDATE users SET password = '$new_hash_password' WHERE id = '$id' ";
-            $u = mysqli_query($connection , $update);
-            $_SESSION['message'] = "update password successfully";
+            $u = mysqli_query($connection, $update);
+            $_SESSION['message'] = "Update password successfully";
             redirect('pages/profile.php');
-
-        }else{
-            $_SESSION['message'] = "wrong confirm password";
+        } else {
+            $_SESSION['message'] = "Wrong confirm password";
             redirect('pages/profile.php');
         }
-        
-
-    }else{
-        $_SESSION['message'] = "wrong current password";
+    } else {
+        $_SESSION['message'] = "Wrong current password";
         redirect('pages/profile.php');
-
     }
 }
-
-
 ?>

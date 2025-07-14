@@ -31,6 +31,13 @@ $data = mysqli_query($connection, $select);
         <div class="col-lg-12">
 
           <div class="card">
+                <?php if(isset($_SESSION['message'])): ?>
+                <div class="alert alert-warning alert-dismissible fade show" role="alert"> 
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <?= $_SESSION['message']; ?>
+                </div>
+                <?php unset($_SESSION['message']); ?>
+                <?php endif; ?>
             <div class="card-body">
               <h5 class="card-title">Users
               <a class="btn btn-primary float-end" href="<?= base_url('app/users/create.php') ?>">Create New</a>
