@@ -17,7 +17,7 @@ if(isset($_POST['send'])){
         exit;
     }
 
-    if(string_validation($email, 3, 30)) {
+    if(email_validation($email)) {
         $_SESSION['message'] = "MAX EMAIL IS 30 AND MIN IS 3";
         redirect('pages/register.php');
         exit;

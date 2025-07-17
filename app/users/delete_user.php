@@ -34,8 +34,6 @@ if (isset($_GET['delete'])) {
     }
 }
 
-
-
 if (isset($_POST['remove_image'])) {
     $id = $_SESSION['admin']['id'];
     if ($_SESSION['admin']['image'] == "def.webp") {

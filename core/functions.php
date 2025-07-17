@@ -77,5 +77,18 @@ function string_validation($data , $min_length = 3, $max_length = 20) {
 
 }
 
+function email_validation($email , $min_length = 3, $max_length = 50) {
+    $is_empty = empty($email);
+    $is_max_length = strlen($email) > $max_length;
+    $is_min_length = strlen($email) < $min_length;
+    $is_not_email = !filter_var($email, FILTER_VALIDATE_EMAIL);
+
+    if($is_empty || $is_max_length || $is_min_length || $is_not_email) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
 
 ?>

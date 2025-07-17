@@ -22,8 +22,13 @@ if(isset($_POST['send'])){
         redirect('app/users/create.php');
         exit;
     }
-    if(string_validation($email, 3 , 30)){
-        $_SESSION['message'] = "MAX EMAIL IS 30 AND MIN IS 3";
+    if(string_validation($rule, 1, 20)){
+        $_SESSION['message'] = "You Must Select Rule";
+        redirect('app/users/create.php');
+        exit;
+    }
+    if(email_validation($email)){
+        $_SESSION['message'] = "You Must Enter Valid Email";
         redirect('app/users/create.php');
         exit;
     }

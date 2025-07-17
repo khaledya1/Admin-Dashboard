@@ -15,8 +15,8 @@ if(isset($_POST['update'])){
         exit;
     }
 
-    if(string_validation($email, 3, 30)){
-        $_SESSION['message'] = "MAX EMAIL IS 30 AND MIN IS 3";
+    if(email_validation($email)){
+        $_SESSION['message'] = "You Must Enter Valid Email";
         redirect('pages/profile.php');
         exit;
     }
