@@ -64,13 +64,14 @@ $data = mysqli_query($connection, $select);
                     <td><?= $row['rule_title'] ?></td>
                     <td><a class="btn btn-warning btn-sm" href="./view.php?view=<?= $row['id'] ?>">View</a></td>
                     <td>
-                      <a href="javascript:void(0);" 
-                         class="btn btn-danger btn-sm delete-btn" 
-                         data-url="<?= base_url('app/users/delete_user.php') ?>?delete=<?= $row['id'] ?>" 
-                         data-bs-toggle="modal" 
-                         data-bs-target="#confirmDeleteModal">
-                        Delete
-                      </a>
+                    <a href="javascript:void(0);" 
+                      class="btn btn-danger btn-sm delete-btn" 
+                      data-url="<?= base_url('app/users/delete_user.php') ?>?delete=<?= $row['id'] ?>" 
+                      data-email="<?= htmlspecialchars($row['email']) ?>"
+                      data-bs-toggle="modal" 
+                      data-bs-target="#confirmDeleteModal">
+                      Delete
+                    </a>
                     </td>
                   </tr>
                 <?php endforeach; ?>
@@ -93,7 +94,9 @@ $data = mysqli_query($connection, $select);
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body text-center">
-        <p class="fs-5 mb-3 text-dark">Are you sure you want to delete this user?</p>
+        <p class="fs-5 mb-3 text-dark">
+          Are you sure you want to delete <strong class="text-danger" id="deleteEmail">this user</strong>?
+        </p>
         <p class="text-muted mb-0">This action cannot be undone.</p>
       </div>
       <div class="modal-footer justify-content-center border-top-0">
@@ -103,6 +106,23 @@ $data = mysqli_query($connection, $select);
     </div>
   </div>
 </div>
+
+<script>
+  const deleteBtns = document.querySelectorAll('.delete-btn');
+  const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+  const deleteEmail = document.getElementById('deleteEmail');
+
+  deleteBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const url = btn.getAttribute('data-url');
+      const email = btn.getAttribute('data-email');
+
+      deleteEmail.textContent = email;
+      confirmDeleteBtn.href = url;
+    });
+  });
+</script>
+
 </main>
 
 <?php 
