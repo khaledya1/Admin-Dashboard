@@ -16,3 +16,18 @@
 </body>
 
 </html>
+
+<script>
+  let confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+  let currentUrl = '';
+
+  document.querySelectorAll('.delete-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      currentUrl = this.getAttribute('data-url');
+    });
+  });
+
+  confirmDeleteBtn.addEventListener('click', function() {
+    window.location.href = currentUrl;
+  });
+</script>

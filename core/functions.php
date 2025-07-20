@@ -90,5 +90,31 @@ function email_validation($email , $min_length = 3, $max_length = 50) {
     }
 }
 
+function image_validation($file, $max_size_mb = 5, $allowed_extensions = ['jpg', 'jpeg', 'png', 'gif', 'webp']) {
+    if (empty($file) || $file['error'] !== UPLOAD_ERR_OK) {
+        return 'Please upload a valid image file';
+    }
+
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mime  = finfo_file($finfo, $file['tmp_name']);
+    finfo_close($finfo);
+
+    if (strpos($mime, 'image/') !== 0) {
+        return 'The uploaded file is not a valid image';
+    }
+
+    $max_size_bytes = $max_size_mb * 1024 * 1024;
+    if ($file['size'] > $max_size_bytes) {
+        return "Size {$max_size_mb} MB is the maximum allowed size for the image";
+    }
+
+    $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    if (!in_array($ext, $allowed_extensions)) {
+        return 'Invalid file extension. Allowed extensions are: ' . implode(', ', $allowed_extensions);
+    }
+
+    return false;
+}
+
 
 ?>

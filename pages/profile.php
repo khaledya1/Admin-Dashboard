@@ -109,7 +109,7 @@ $user = mysqli_fetch_assoc($result);
                         <img src="<?= base_url('app/users/upload/') . $_SESSION['admin']['image'] ?>" alt="Profile">
                         <div class="pt-2">
                           <label for="image_upload" class="btn btn-primary btn-sm" title="Upload new profile image"><i class="bi bi-upload"></i></label>
-                          <input type="file" id="image_upload" name="image" class="d-none" >
+                          <input type="file" id="image_upload" name="image" class="d-none" accept="image/*">
                           <button type="button" class="btn btn-danger btn-sm" title="Remove my profile image" 
                           onclick="document.getElementById('removeImageForm').submit();"><i class="bi bi-trash"></i></button>
 
